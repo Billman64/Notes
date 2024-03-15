@@ -24,7 +24,7 @@
     <include
         layout="@layout/content_main"
         android:layout_width="match_parent"
-        android:layout_height="602dp"
+        android:layout_height="700dp"
         android:layout_gravity="bottom" />
 
   <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -34,6 +34,7 @@
   android:layout_gravity="bottom|end"
   android:layout_marginEnd="@dimen/fab_margin"
   android:layout_marginBottom="16dp"
-  app:srcCompat="@android:drawable/ic_input_add" />
+  app:srcCompat="@android:drawable/ic_input_add"
+  android:contentDescription="@string/fab_desc" />
 
   </androidx.coordinatorlayout.widget.CoordinatorLayout>

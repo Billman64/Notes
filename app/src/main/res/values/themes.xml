@@ -3,6 +3,9 @@
     <style name="Base.Theme.Notes" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#00b</item>
+        <item name="colorPrimaryDark">#007</item>
+        <item name="colorAccent">#00f</item>
     </style>
 
     <style name="Theme.Notes" parent="Base.Theme.Notes" />
