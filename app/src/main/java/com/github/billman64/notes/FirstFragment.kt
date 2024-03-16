@@ -7,6 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.get
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.billman64.notes.databinding.FragmentFirstBinding
@@ -21,6 +25,8 @@ class FirstFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    private val vm: ViewModel = SharedViewModel()
 
 
     override fun onCreateView(
@@ -70,6 +76,10 @@ class FirstFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        var vm = SharedViewModel()
+
+        Log.d(TAG, "(frag1) vm.title: ${vm.title.value.toString()}")
+
 
 
 
@@ -102,8 +112,6 @@ class FirstFragment : Fragment() {
         binding.recyclerview.adapter = adapter
 
 
-
-
 //        binding.recyclerview.setOnClickListener {
 //            Log.d(TAG, "recyclerView tapped")
 //            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
@@ -112,20 +120,14 @@ class FirstFragment : Fragment() {
         Log.d(TAG, "recyclerView - item count: ${binding.recyclerview.adapter?.itemCount}")
 
 
-
-
-
-
-
-
-
-
-
+        val vm = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
 
     }
+
 
 override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
+

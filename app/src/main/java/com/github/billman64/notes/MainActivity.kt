@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.core.database.getStringOrNull
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -23,13 +24,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    private val viewModel: SharedViewModel by viewModels()
+//    private val viewModel: SharedViewModel by viewModels()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.updateTitle("Sample Title")
-        viewModel.updateContent("Sample content. List of pizza places: Domino's, Pizza Hut, Jet's Pizza")
+//        viewModel.updateTitle("Sample Title")
+//        viewModel.updateContent("Sample content. List of pizza places: Domino's, Pizza Hut, Jet's Pizza")
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -67,14 +70,17 @@ class MainActivity : AppCompatActivity() {
         db.execSQL(sql)
 
         sql = "SELECT COUNT(*) FROM notes;"
-        var numRows = 0
-        var strArr = arrayOf<String>()
-        var sqlResponse = db.rawQuery(sql, strArr )
-        Log.d(TAG, "db notes table row count: ${sqlResponse}")
 
-        if(sqlResponse.toString().all { char -> char.isDigit() }) { // check if response to row count is a number
-            numRows = sqlResponse.toString().toInt()
-        } else numRows=0
+        var strArr = arrayOf<String>()
+        var sqlResponse = db.rawQuery(sql, null )
+        Log.d(TAG, "db columnCount: ${sqlResponse.columnCount}")
+        Log.d(TAG, "db columnName: ${sqlResponse.getColumnName(0)}")
+        sqlResponse.moveToFirst()
+        Log.d(TAG, "db getInt(0): ${sqlResponse.getInt(0)}")
+
+        var numRows = sqlResponse.getInt(0)
+        Log.d(TAG, "db notes table row count: ${numRows}")
+
 
         if(numRows>0) {     // fetch notes from database
             var noteList = ArrayList<Note>()

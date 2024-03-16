@@ -20,7 +20,8 @@
         android:textStyle="bold"
         android:textSize="20sp"
         android:text="title of note"
-        tools:text="Groceries"/>
+        tools:text="Groceries"
+        tools:context="Details" />
 
     <TextView
         android:id="@+id/content"

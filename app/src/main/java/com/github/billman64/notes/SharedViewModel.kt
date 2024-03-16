@@ -10,7 +10,7 @@ public class SharedViewModel: ViewModel() {
     private var _content = MutableLiveData<String>()   // LiveData for content of note
 
     // public getters
-    val title: LiveData<String>
+    var title: LiveData<String> = _title
         get() = _title
     val content: LiveData<String>
         get() = _content
