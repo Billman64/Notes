@@ -50,35 +50,7 @@ class FirstFragment : Fragment() {
 
     }
 
-    private fun mockData(): ArrayList<Note> {
-        var list = ArrayList<Note>()
-        list.add(Note("Groceries", "Cereal, milk, eggs, butter, pancake mix"))
-        list.add(Note("Car maintenance", "Car wash. Oil change. Change air filter. Renew registration. Renew license."))
-        list.add(Note("Chores", "1. Dusting 2. Vacuum 3. Mop kitchen 4. Take out garbage."))
-        list.add(Note("Study Android concepts","Courses on Udacity, Udemy, Coursera. Google I/O 2024. Dagger. Fragments. MVVM. NavGraph. Git. Compose. ML and AI."))
-        list.add(Note("Groceries", "Cereal, milk, eggs, butter, pancake mix"))
-        list.add(Note("Car maintenance", "Car wash. Oil change. Change air filter. Renew registration. Renew license."))
-        list.add(Note("Chores", "1. Dusting 2. Vacuum 3. Mop kitchen 4. Take out garbage."))
-        list.add(Note("Study Android concepts","Courses on Udacity, Udemy, Coursera. Google I/O 2024. Dagger. Fragments. MVVM. NavGraph. Git. Compose. ML and AI."))
-        list.add(Note("Groceries", "Cereal, milk, eggs, butter, pancake mix"))
-        list.add(Note("Car maintenance", "Car wash. Oil change. Change air filter. Renew registration. Renew license."))
-        list.add(Note("Chores", "1. Dusting 2. Vacuum 3. Mop kitchen 4. Take out garbage."))
-        list.add(Note("Study Android concepts","Courses on Udacity, Udemy, Coursera. Google I/O 2024. Dagger. Fragments. MVVM. NavGraph. Git. Compose. ML and AI."))
-        list.add(Note("Groceries", "Cereal, milk, eggs, butter, pancake mix"))
-        list.add(Note("Car maintenance", "Car wash. Oil change. Change air filter. Renew registration. Renew license."))
-        list.add(Note("Chores", "1. Dusting 2. Vacuum 3. Mop kitchen 4. Take out garbage."))
-        list.add(Note("Study Android concepts","Courses on Udacity, Udemy, Coursera. Google I/O 2024. Dagger. Fragments. MVVM. NavGraph. Git. Compose. ML and AI."))
-        list.add(Note("Groceries", "Cereal, milk, eggs, butter, pancake mix"))
-        list.add(Note("Car maintenance", "Car wash. Oil change. Change air filter. Renew registration. Renew license."))
-        list.add(Note("Chores", "1. Dusting 2. Vacuum 3. Mop kitchen 4. Take out garbage."))
-        list.add(Note("Study Android concepts","Courses on Udacity, Udemy, Coursera. Google I/O 2024. Dagger. Fragments. MVVM. NavGraph. Git. Compose. ML and AI."))
-        list.add(Note("Groceries", "Cereal, milk, eggs, butter, pancake mix"))
-        list.add(Note("Car maintenance", "Car wash. Oil change. Change air filter. Renew registration. Renew license."))
-        list.add(Note("Chores", "1. Dusting 2. Vacuum 3. Mop kitchen 4. Take out garbage."))
-        list.add(Note("Study Android concepts","Courses on Udacity, Udemy, Coursera. Google I/O 2024. Dagger. Fragments. MVVM. NavGraph. Git. Compose. ML and AI."))
 
-        return list
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,32 +105,33 @@ class FirstFragment : Fragment() {
 
     private fun loadData(): ArrayList<Note> {
 
+        // Load any notes from local database (SQLite)
 
-        //TODO: load any notes from local database (SQLite)
+        // Ensure db exists first. If not, create a new one.
+        val db: SQLiteDatabase = requireActivity().openOrCreateDatabase("notesDb", MODE_PRIVATE, null)
 
 
-        val db: SQLiteDatabase = requireActivity().openOrCreateDatabase("notesDb", android.content.Context.MODE_PRIVATE, null)
+        // Temp code for debugging only !!!
+        var tempSql = "DROP TABLE IF EXISTS Notes"
+        db.execSQL(tempSql)
 
-        //TODO: check if db exists first. If not, create a new one.
-        var sql = "CREATE TABLE IF NOT EXISTS Notes(Id INT, Title VARCHAR, Content, VARCHAR)"
+        // Ensure there's a Notes table
+        var sql = "CREATE TABLE IF NOT EXISTS Notes (Id INT, Title VARCHAR, Content VARCHAR);"
         db.execSQL(sql)
 
+        // Count rows, check for existing data
         sql = "SELECT COUNT(*) FROM Notes;"
-
-        var strArr = arrayOf<String>()
         var sqlResponse = db.rawQuery(sql, null )
         Log.d(ContentValues.TAG, "db columnCount: ${sqlResponse.columnCount}")
         Log.d(ContentValues.TAG, "db columnName: ${sqlResponse.getColumnName(0)}")
         sqlResponse.moveToFirst()
         Log.d(ContentValues.TAG, "db getInt(0): ${sqlResponse.getInt(0)}")
-
         var numRows = sqlResponse.getInt(0)
         Log.d(ContentValues.TAG, "db notes table row count: ${numRows}")
 
+        // Fetch notes from database into an ArrayList
         var noteList = ArrayList<Note>()
-
-        if(numRows>0) {     // fetch notes from database
-
+        if(numRows>0) {
             sql="SELECT * FROM Notes;"
             sqlResponse = db.rawQuery(sql, null)
             sqlResponse.moveToFirst()
@@ -174,18 +147,19 @@ class FirstFragment : Fragment() {
             Log.d(TAG, "db - first 3 titles: ${noteList[0].title} | ${noteList[1].title} | ${noteList[2].title}")
 
 
-        } else {    // if no rows, create mock data
+        } else {    // if no rows, create mock data     //TODO: Refactor mock data into a function
 
-            // mock data
+            // mock data    //TODO: use string resources instead, which is good for global language translations.
             noteList.add(Note("Welcome","This app can be used to track notes. You can create, edit, and delete them."))
-            noteList.add(Note("Tips and tricks","You can delete a note by holding on the selected note row."))  //TODO: use string resources instead
+            noteList.add(Note("Tips and tricks","You can delete a note by holding on the selected note row."))
             noteList.add(Note("About this app","This app uses 2 fragments in an MVVP architecture. The list of notes are shown in a RecyclerView, which is a memory-efficient way to display a large number of notes."))
 
-            Log.d(ContentValues.TAG, "db adding mock data...")
 
             // insert mock data into database
+             Log.d(TAG, "db adding mock data. ${noteList.count()} new records...")
             for(i in 0..(noteList.count()-1)){
-                sql = "INSERT INTO Notes (Id, Title, Content) VALUES ($i,${noteList[i].title},${noteList[i].content});"
+                Log.d(TAG, "insert sql: ${sql}")
+                sql = "INSERT INTO Notes (Id, Title, Content) VALUES ($i,'${noteList[i].title}','${noteList[i].content}');"
                 db.execSQL(sql)
             }
 
@@ -197,10 +171,10 @@ class FirstFragment : Fragment() {
         }
 
         // log data for debugging purposes
-        Log.d(TAG, "(frag1) db noteList count: ${noteList.count()}")
-        Log.d(TAG, "(frag1) db noteList(0): ${noteList[0].title} ${noteList[0].content.subSequence(0..5)}")
-        Log.d(TAG, "(frag1) db noteList(1): ${noteList[1].title} ${noteList[1].content.subSequence(0..5)}")
-        Log.d(TAG, "(frag1) db noteList(2): ${noteList[2].title} ${noteList[2].content.subSequence(0..5)}")
+//        Log.d(TAG, "(frag1) db noteList count: ${noteList.count()}")
+//        Log.d(TAG, "(frag1) db noteList(0): ${noteList[0].title} ${noteList[0].content.subSequence(0..5)}")
+//        Log.d(TAG, "(frag1) db noteList(1): ${noteList[1].title} ${noteList[1].content.subSequence(0..5)}")
+//        Log.d(TAG, "(frag1) db noteList(2): ${noteList[2].title} ${noteList[2].content.subSequence(0..5)}")
 
         //TODO: use Room and utilize it for caching strategy to reduce db calls for better performance
 
@@ -211,6 +185,38 @@ class FirstFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+
+    // Deprecated 
+    private fun mockData(): ArrayList<Note> {
+        var list = ArrayList<Note>()
+        list.add(Note("Groceries", "Cereal, milk, eggs, butter, pancake mix"))
+        list.add(Note("Car maintenance", "Car wash. Oil change. Change air filter. Renew registration. Renew license."))
+        list.add(Note("Chores", "1. Dusting 2. Vacuum 3. Mop kitchen 4. Take out garbage."))
+        list.add(Note("Study Android concepts","Courses on Udacity, Udemy, Coursera. Google I/O 2024. Dagger. Fragments. MVVM. NavGraph. Git. Compose. ML and AI."))
+        list.add(Note("Groceries", "Cereal, milk, eggs, butter, pancake mix"))
+        list.add(Note("Car maintenance", "Car wash. Oil change. Change air filter. Renew registration. Renew license."))
+        list.add(Note("Chores", "1. Dusting 2. Vacuum 3. Mop kitchen 4. Take out garbage."))
+        list.add(Note("Study Android concepts","Courses on Udacity, Udemy, Coursera. Google I/O 2024. Dagger. Fragments. MVVM. NavGraph. Git. Compose. ML and AI."))
+        list.add(Note("Groceries", "Cereal, milk, eggs, butter, pancake mix"))
+        list.add(Note("Car maintenance", "Car wash. Oil change. Change air filter. Renew registration. Renew license."))
+        list.add(Note("Chores", "1. Dusting 2. Vacuum 3. Mop kitchen 4. Take out garbage."))
+        list.add(Note("Study Android concepts","Courses on Udacity, Udemy, Coursera. Google I/O 2024. Dagger. Fragments. MVVM. NavGraph. Git. Compose. ML and AI."))
+        list.add(Note("Groceries", "Cereal, milk, eggs, butter, pancake mix"))
+        list.add(Note("Car maintenance", "Car wash. Oil change. Change air filter. Renew registration. Renew license."))
+        list.add(Note("Chores", "1. Dusting 2. Vacuum 3. Mop kitchen 4. Take out garbage."))
+        list.add(Note("Study Android concepts","Courses on Udacity, Udemy, Coursera. Google I/O 2024. Dagger. Fragments. MVVM. NavGraph. Git. Compose. ML and AI."))
+        list.add(Note("Groceries", "Cereal, milk, eggs, butter, pancake mix"))
+        list.add(Note("Car maintenance", "Car wash. Oil change. Change air filter. Renew registration. Renew license."))
+        list.add(Note("Chores", "1. Dusting 2. Vacuum 3. Mop kitchen 4. Take out garbage."))
+        list.add(Note("Study Android concepts","Courses on Udacity, Udemy, Coursera. Google I/O 2024. Dagger. Fragments. MVVM. NavGraph. Git. Compose. ML and AI."))
+        list.add(Note("Groceries", "Cereal, milk, eggs, butter, pancake mix"))
+        list.add(Note("Car maintenance", "Car wash. Oil change. Change air filter. Renew registration. Renew license."))
+        list.add(Note("Chores", "1. Dusting 2. Vacuum 3. Mop kitchen 4. Take out garbage."))
+        list.add(Note("Study Android concepts","Courses on Udacity, Udemy, Coursera. Google I/O 2024. Dagger. Fragments. MVVM. NavGraph. Git. Compose. ML and AI."))
+
+        return list
     }
 }
 

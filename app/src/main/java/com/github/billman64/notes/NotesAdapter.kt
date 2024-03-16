@@ -49,7 +49,7 @@ class NotesAdapter(private val noteList:ArrayList<Note>): RecyclerView.Adapter<N
         val previewThreshold = 40
         Log.d(TAG, "notesAdapter - item content: ${currentItem.content}")
 
-        previewView.text = currentItem?.content?.subSequence(0,previewThreshold-1)
+         previewView.text = currentItem?.content?.subSequence(0,previewThreshold-1)
         if(currentItem.content.length>=previewThreshold) previewView.text = "${previewView.text.toString()}..."
 
         holder.itemView.animation = AnimationUtils.loadAnimation(holder.itemView.context, R.anim.fade_translate)
