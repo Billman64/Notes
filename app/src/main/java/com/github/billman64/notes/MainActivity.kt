@@ -60,44 +60,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        //TODO: load any notes from local database (SQLite)
 
 
-        val db:SQLiteDatabase = openOrCreateDatabase("notesDb", MODE_PRIVATE, null)
-
-        //TODO: check if db exists first. If not, create a new one.
-        var sql = "CREATE TABLE IF NOT EXISTS Notes(Id INT, Title VARCHAR, Content, VARCHAR)"
-        db.execSQL(sql)
-
-        sql = "SELECT COUNT(*) FROM notes;"
-
-        var strArr = arrayOf<String>()
-        var sqlResponse = db.rawQuery(sql, null )
-        Log.d(TAG, "db columnCount: ${sqlResponse.columnCount}")
-        Log.d(TAG, "db columnName: ${sqlResponse.getColumnName(0)}")
-        sqlResponse.moveToFirst()
-        Log.d(TAG, "db getInt(0): ${sqlResponse.getInt(0)}")
-
-        var numRows = sqlResponse.getInt(0)
-        Log.d(TAG, "db notes table row count: ${numRows}")
-
-
-        if(numRows>0) {     // fetch notes from database
-            var noteList = ArrayList<Note>()
-
-
-            for(i in 1..numRows) {
-                sql=""
-                sqlResponse = db.rawQuery(sql, strArr)
-
-//                noteList.add()
-
-
-
-            }
-
-
-        }
 
 
 
