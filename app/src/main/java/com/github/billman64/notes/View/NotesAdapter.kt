@@ -1,21 +1,15 @@
-package com.github.billman64.notes
+package com.github.billman64.notes.View
 
-import android.app.Activity
-import android.content.DialogInterface
-import android.content.DialogInterface.OnClickListener
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.TextView
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.findViewTreeViewModelStoreOwner
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.github.billman64.notes.Model.Note
+import com.github.billman64.notes.R
 
 class NotesAdapter(private val noteList:ArrayList<Note>): RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
 //class NotesAdapter(private val noteList:ArrayList<Note>, private val itemClickListener: (note:Note) -> Unit): RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
@@ -52,7 +46,9 @@ class NotesAdapter(private val noteList:ArrayList<Note>): RecyclerView.Adapter<N
          previewView.text = currentItem?.content?.subSequence(0,previewThreshold-1)
         if(currentItem.content.length>=previewThreshold) previewView.text = "${previewView.text.toString()}..."
 
-        holder.itemView.animation = AnimationUtils.loadAnimation(holder.itemView.context, R.anim.fade_translate)
+        holder.itemView.animation = AnimationUtils.loadAnimation(holder.itemView.context,
+            R.anim.fade_translate
+        )
             // The less is done here, the better for performance since this will be called frequently.
 
         holder.itemView.setOnClickListener(View.OnClickListener {

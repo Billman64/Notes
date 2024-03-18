@@ -1,9 +1,6 @@
-package com.github.billman64.notes
+package com.github.billman64.notes.View
 
-import android.content.ContentValues.TAG
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
-import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -12,11 +9,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.viewModels
-import androidx.core.database.getStringOrNull
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.github.billman64.notes.R
 import com.github.billman64.notes.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -55,21 +50,9 @@ class MainActivity : AppCompatActivity() {
         val fm:FragmentManager = supportFragmentManager // supportFragmentManager needed to initialize
         val fragmentTransaction:FragmentTransaction = fm.beginTransaction()
             .setCustomAnimations(R.anim.fade_translate,0)   // custom animation
-        fragmentTransaction.replace(R.id.nav_host_fragment_content_main, FirstFragment())
-//        fragmentTransaction.commit()  //TODO: fix UI bug that keeps recyclerview initial setup stuck on screen
+        fragmentTransaction.replace(R.id.nav_host_fragment_content_main, listingFragment())
 
-
-
-
-
-
-
-
-
-
-
-
-
+        //TODO: Use Dagger for dependency injection with objects
 
 
     }

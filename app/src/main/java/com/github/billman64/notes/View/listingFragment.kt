@@ -1,31 +1,27 @@
-package com.github.billman64.notes
+package com.github.billman64.notes.View
 
 import android.content.ContentValues
-import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteDatabase.CursorFactory
-import android.database.sqlite.SQLiteDatabase.openOrCreateDatabase
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.billman64.notes.Model.Note
+import com.github.billman64.notes.R
+import com.github.billman64.notes.ViewModel.SharedViewModel
 import com.github.billman64.notes.databinding.FragmentFirstBinding
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment() {
+class listingFragment : Fragment() {
 
     private val TAG = "Notes-" + this.javaClass.simpleName
     private var _binding: FragmentFirstBinding? = null
@@ -81,7 +77,7 @@ class FirstFragment : Fragment() {
 
         var adapter = NotesAdapter(noteList)
 
-        adapter.setOnClickListener(object:NotesAdapter.OnClickListener{ //TODO: figure out why this listener is not responding
+        adapter.setOnClickListener(object: NotesAdapter.OnClickListener { //TODO: figure out why this listener is not responding
             override fun onClick(position: Int, model: Note) {
                 Log.d(TAG, "adapter clicked!")
 
@@ -104,6 +100,8 @@ class FirstFragment : Fragment() {
     }
 
     private fun loadData(): ArrayList<Note> {
+
+        //TODO: create a DB helper object to separate and centralize database operations.
 
         // Load any notes from local database (SQLite)
 
@@ -173,7 +171,7 @@ class FirstFragment : Fragment() {
         
         var mNoteList = ArrayList<Note>()
 
-        // Make data
+        // Mock data
         mNoteList.add(Note(getString(R.string.mock1),  getString(R.string.mock1_content)))   // Resource strings used to facilitate global language translations.
         mNoteList.add(Note(getString(R.string.mock2), getString(R.string.mock2_content)))
         mNoteList.add(Note(getString(R.string.mock3), getString(R.string.mock3_content)))

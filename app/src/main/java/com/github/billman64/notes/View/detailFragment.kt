@@ -1,4 +1,4 @@
-package com.github.billman64.notes
+package com.github.billman64.notes.View
 
 import android.os.Bundle
 import android.util.Log
@@ -8,13 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
+import com.github.billman64.notes.ViewModel.SharedViewModel
 import com.github.billman64.notes.databinding.FragmentSecondBinding
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class SecondFragment : Fragment() {
+class detailFragment : Fragment() {
 
     private val TAG = this.javaClass.simpleName
     private var _binding: FragmentSecondBinding? = null
@@ -23,7 +23,7 @@ class SecondFragment : Fragment() {
     private val binding get() = _binding!!
 
 //    private var vm = SharedViewModel()      // Reference shared ViewModel to receive Note detail data from (without depending on a fragment lifecycle)
-        private var vm:SharedViewModel? = null
+        private var vm: SharedViewModel? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

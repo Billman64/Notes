@@ -1,4 +1,4 @@
-package com.github.billman64.notes
+package com.github.billman64.notes.ViewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -1,4 +1,4 @@
-package com.github.billman64.notes
+package com.github.billman64.notes.Model
 
 data class Note(var title:String, var content:String){
 
