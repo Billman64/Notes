@@ -147,27 +147,8 @@ class FirstFragment : Fragment() {
             Log.d(TAG, "db - first 3 titles: ${noteList[0].title} | ${noteList[1].title} | ${noteList[2].title}")
 
 
-        } else {    // if no rows, create mock data     //TODO: Refactor mock data into a function
-
-            // mock data    //TODO: use string resources instead, which is good for global language translations.
-            noteList.add(Note("Welcome","This app can be used to track notes. You can create, edit, and delete them."))
-            noteList.add(Note("Tips and tricks","You can delete a note by holding on the selected note row."))
-            noteList.add(Note("About this app","This app uses 2 fragments in an MVVP architecture. The list of notes are shown in a RecyclerView, which is a memory-efficient way to display a large number of notes."))
-
-
-            // insert mock data into database
-             Log.d(TAG, "db adding mock data. ${noteList.count()} new records...")
-            for(i in 0..(noteList.count()-1)){
-                Log.d(TAG, "insert sql: ${sql}")
-                sql = "INSERT INTO Notes (Id, Title, Content) VALUES ($i,'${noteList[i].title}','${noteList[i].content}');"
-                db.execSQL(sql)
-            }
-
-            // count rows
-            sql = "SELECT COUNT (*) FROM Notes"
-            sqlResponse = db.rawQuery(sql, null)
-            sqlResponse.moveToFirst()
-            Log.d(ContentValues.TAG, "db mock notes created: ${sqlResponse.getInt(0)}")
+        } else {    // if no rows, create mock data
+            noteList = loadMockData()
         }
 
         // log data for debugging purposes
@@ -188,8 +169,42 @@ class FirstFragment : Fragment() {
     }
 
 
-    // Deprecated 
-    private fun mockData(): ArrayList<Note> {
+    private fun loadMockData():ArrayList<Note>{
+        
+        var mNoteList = ArrayList<Note>()
+
+        // Make data
+        mNoteList.add(Note(getString(R.string.mock1),  getString(R.string.mock1_content)))   // Resource strings used to facilitate global language translations.
+        mNoteList.add(Note(getString(R.string.mock2), getString(R.string.mock2_content)))
+        mNoteList.add(Note(getString(R.string.mock3), getString(R.string.mock3_content)))
+        
+        // Ensure db exists first. If not, create a new one.
+        val db: SQLiteDatabase = requireActivity().openOrCreateDatabase("notesDb", MODE_PRIVATE, null)
+        //TODO: refactor so that db opening is done in only one reusable place
+        var sql = ""
+
+        // insert mock data into database
+        Log.d(TAG, "db adding mock data. ${mNoteList.count()} new records...")
+        for(i in 0..<mNoteList.count()){
+            Log.d(TAG, "insert sql: ${sql}")
+            sql = "INSERT INTO Notes (Id, Title, Content) VALUES ($i,'${mNoteList[i].title}','${mNoteList[i].content}');"
+            db.execSQL(sql)
+        }
+
+        // count rows
+        sql = "SELECT COUNT (*) FROM Notes"
+        var sqlResponse = db.rawQuery(sql, null)
+        sqlResponse.moveToFirst()
+        Log.d(ContentValues.TAG, "db mock notes created: ${sqlResponse.getInt(0)}")
+        //TODO: refactor into a reusable function, or as part of a db helper object
+        
+        return mNoteList
+    }
+    
+    
+    
+    // Deprecated
+    private fun mockDataNoDb(): ArrayList<Note> {
         var list = ArrayList<Note>()
         list.add(Note("Groceries", "Cereal, milk, eggs, butter, pancake mix"))
         list.add(Note("Car maintenance", "Car wash. Oil change. Change air filter. Renew registration. Renew license."))

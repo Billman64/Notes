@@ -9,6 +9,13 @@
 
     <string name="fab_desc">Button. Add new note.</string>
 
+    <string name="mock1">Welcome</string>
+    <string name="mock1_content">This app can be used to track notes. You can create, edit, and delete them.</string>
+    <string name="mock2">Tips and tricks</string>
+    <string name="mock2_content">You can delete a note by holding on the selected note row.</string>
+    <string name="mock3">About this app</string>
+    <string name="mock3_content">This app uses 2 fragments in an MVVP architecture. The list of notes are shown in a RecyclerView, which is a memory-efficient way to display a large number of notes.</string>
+
     <string name="content">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
