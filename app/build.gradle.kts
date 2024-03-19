@@ -62,4 +62,6 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler:2.51")
     
     // JUnit
+    androidTestImplementation("junit:junit:4.13.2")
+
 }

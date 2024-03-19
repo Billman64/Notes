@@ -21,7 +21,8 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
     private val TAG = this.javaClass.simpleName
     private val DBNAME = "notesDb"
     private val TABLENAME = "Notes"
-    public fun loadData(context: Context): ArrayList<Note> {
+    private val c = context
+    public fun loadData(): ArrayList<Note> {
 
         //TODO: create a DB helper object to separate and centralize database operations.
 
@@ -34,7 +35,8 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 //        val db: SQLiteDatabase = requireActivity().openOrCreateDatabase("notesDb",
 //            MODE_PRIVATE, null)   //TODO: Find out why this code would work inside a fragment, but not here. Must be a context issue.
 
-        val db: SQLiteDatabase = context.openOrCreateDatabase(DBNAME,
+
+        val db: SQLiteDatabase = c.openOrCreateDatabase(DBNAME,
             MODE_PRIVATE, null) // does not work
 
 //        val db:SQLiteDatabase = readableDatabase
@@ -55,10 +57,10 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 //        Log.d(ContentValues.TAG, "db columnName: ${sqlResponse.getColumnName(0)}")
 //        sqlResponse.moveToFirst()
         
-        var numRows = countRows(context)
+        var numRows = countRows()
         Log.d(ContentValues.TAG, "db getInt(0): ${numRows}")
         
-        Log.d(ContentValues.TAG, "db notes table row count: ${countRows(context)}")
+        Log.d(ContentValues.TAG, "db notes table row count: ${countRows()}")
 
         // Fetch notes from database into an ArrayList
         var noteList = ArrayList<Note>()
@@ -79,7 +81,7 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 
 
         } else {    // if no rows, create mock data
-            noteList = loadMockData(context)
+            noteList = loadMockData()
         }
 
         // log data for debugging purposes
@@ -94,7 +96,7 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
         return noteList
     }
 
-    private fun loadMockData(context: Context):ArrayList<Note>{
+    private fun loadMockData():ArrayList<Note>{
 
         var mNoteList = ArrayList<Note>()
 
@@ -119,16 +121,16 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
         }
 
 
-        Log.d(ContentValues.TAG, "db mock notes created: ${countRows(context)}")
+        Log.d(ContentValues.TAG, "db mock notes created: ${countRows()}")
         db.close()
 
         return mNoteList
     }
     
-    private fun countRows(context: Context):Int{
+    private fun countRows():Int{
         var numRows = 0
 
-        val mDb: SQLiteDatabase = context.openOrCreateDatabase(DBNAME,
+        val mDb: SQLiteDatabase = c.openOrCreateDatabase(DBNAME,
             Context.MODE_PRIVATE, null)
         
         // count rows

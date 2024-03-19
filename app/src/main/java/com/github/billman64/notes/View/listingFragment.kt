@@ -83,7 +83,7 @@ class listingFragment : Fragment() {
             MODE_PRIVATE, null)
 
         Log.d(TAG, "db loading from helper...")
-        var noteList = dbH.loadData(this.requireContext())
+        var noteList = dbH.loadData()
 
 
         var adapter = NotesAdapter(noteList)
