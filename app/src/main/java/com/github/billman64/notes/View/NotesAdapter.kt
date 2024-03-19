@@ -43,7 +43,11 @@ class NotesAdapter(private val noteList:ArrayList<Note>): RecyclerView.Adapter<N
         val previewThreshold = 40
         Log.d(TAG, "notesAdapter - item content: ${currentItem.content}")
 
-         previewView.text = currentItem?.content?.subSequence(0,previewThreshold-1)
+        // Establish preview text, of proper size
+        var preview = currentItem.content
+        if(preview.length<previewThreshold) preview = preview.subSequence(0,preview.length).toString()
+
+         previewView.text = preview
         if(currentItem.content.length>=previewThreshold) previewView.text = "${previewView.text.toString()}..."
 
         holder.itemView.animation = AnimationUtils.loadAnimation(holder.itemView.context,

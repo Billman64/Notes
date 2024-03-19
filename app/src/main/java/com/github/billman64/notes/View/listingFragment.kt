@@ -67,13 +67,8 @@ class listingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        binding.buttonFirst.setOnClickListener {
-//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-//        }
-
-
         // Load data into recyclerView (mock data for now)
-        val recyclerView = binding.recyclerview     //TODO: fix inflate error
+        val recyclerView = binding.recyclerview
         recyclerView.layoutManager = LinearLayoutManager(this.context)
 
         val dbH = DbHelper(requireContext())
@@ -84,6 +79,12 @@ class listingFragment : Fragment() {
 
         Log.d(TAG, "db loading from helper...")
         var noteList = dbH.loadData()
+
+
+        // testing purposes only
+//        dbH.newRecord("test", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+//        dbH.countRows()
+
 
 
         var adapter = NotesAdapter(noteList)

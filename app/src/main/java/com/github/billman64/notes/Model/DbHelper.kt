@@ -23,40 +23,22 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
     private val TABLENAME = "Notes"
     private val c = context
     public fun loadData(): ArrayList<Note> {
-
-        //TODO: create a DB helper object to separate and centralize database operations.
-
         // Load any notes from local database (SQLite)
 
         // Ensure db exists first. If not, create a new one.
-//        val db: SQLiteDatabase = Activity().openOrCreateDatabase(DBNAME,
-//            Context.MODE_PRIVATE, null)
+        val db: SQLiteDatabase = openDb()
 
-//        val db: SQLiteDatabase = requireActivity().openOrCreateDatabase("notesDb",
-//            MODE_PRIVATE, null)   //TODO: Find out why this code would work inside a fragment, but not here. Must be a context issue.
+//        val db:SQLiteDatabase = readableDatabase  // alternative
 
 
-        val db: SQLiteDatabase = c.openOrCreateDatabase(DBNAME,
-            MODE_PRIVATE, null) // does not work
-
-//        val db:SQLiteDatabase = readableDatabase
-
-
-//        // Temp code for debugging only !!!
-//        var tempSql = "DROP TABLE IF EXISTS ${TABLENAME}"
-//        db.execSQL(tempSql)
+        // Temp code for debugging only !!!
+        var tempSql = "DROP TABLE IF EXISTS ${TABLENAME}"
+        db.execSQL(tempSql)
 
         // Ensure there's a Notes table
         var sql = "CREATE TABLE IF NOT EXISTS ${TABLENAME} (Id INT, Title VARCHAR, Content VARCHAR);"
         db.execSQL(sql)
 
-        // Count rows, check for existing data
-//        sql = "SELECT COUNT(*) FROM ${TABLENAME};"
-//        var sqlResponse = db.rawQuery(sql, null )
-//        Log.d(ContentValues.TAG, "db columnCount: ${sqlResponse.columnCount}")
-//        Log.d(ContentValues.TAG, "db columnName: ${sqlResponse.getColumnName(0)}")
-//        sqlResponse.moveToFirst()
-        
         var numRows = countRows()
         Log.d(ContentValues.TAG, "db getInt(0): ${numRows}")
         
@@ -84,35 +66,49 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
             noteList = loadMockData()
         }
 
-        // log data for debugging purposes
-//        Log.d(TAG, "(frag1) db noteList count: ${noteList.count()}")
-//        Log.d(TAG, "(frag1) db noteList(0): ${noteList[0].title} ${noteList[0].content.subSequence(0..5)}")
-//        Log.d(TAG, "(frag1) db noteList(1): ${noteList[1].title} ${noteList[1].content.subSequence(0..5)}")
-//        Log.d(TAG, "(frag1) db noteList(2): ${noteList[2].title} ${noteList[2].content.subSequence(0..5)}")
+        logDataSample(noteList)
+
+
 
         //TODO: use Room and utilize it for caching strategy to reduce db calls for better performance
 
         db.close()
         return noteList
     }
+    private fun logDataSample(noteList:ArrayList<Note>) {
+        // log data for debugging purposes
+        val MAX = 3
+        val LENGTH = 10
 
+        // log count
+        Log.d(TAG, "db noteList count: ${noteList.count()}")
+
+        // log 3 records, at most
+        var i = 0
+        while(i<noteList.count() && i<MAX) {
+           Log.d(TAG, " db noteList(0): ${noteList[0].title} ${noteList[0].content.subSequence(0..LENGTH)}")
+            i++
+        }
+    }
     private fun loadMockData():ArrayList<Note>{
 
         var mNoteList = ArrayList<Note>()
 
         // Mock data
         // Resource strings used to facilitate global language translations.
-        mNoteList.add(Note(getString(Activity(), R.string.mock1),  getString(Activity(), R.string.mock1_content)))
-        mNoteList.add(Note(getString(Activity(), R.string.mock2), getString(Activity(), R.string.mock2_content)))
-        mNoteList.add(Note(getString(Activity(), R.string.mock3), getString(Activity(), R.string.mock3_content)))
+        mNoteList.add(Note(getString(c, R.string.mock1),  getString(c, R.string.mock1_content)))
+        mNoteList.add(Note(getString(c, R.string.mock2), getString(c, R.string.mock2_content)))
+        mNoteList.add(Note(getString(c, R.string.mock3), getString(c, R.string.mock3_content)))
 
         // Ensure db exists first. If not, create a new one.
-        val db: SQLiteDatabase = Activity().openOrCreateDatabase(DBNAME,
-            Context.MODE_PRIVATE, null)
-        //TODO: refactor so that db opening is done in only one reusable place
+//        val db: SQLiteDatabase = Activity().openOrCreateDatabase(DBNAME,
+//            Context.MODE_PRIVATE, null)
+
+        val db: SQLiteDatabase = openDb()
+
         var sql = ""
 
-        // insert mock data into database
+        // insert the mock data into database
         Log.d(TAG, "db adding mock data. ${mNoteList.count()} new records...")
         for(i in 0..<mNoteList.count()){
             Log.d(TAG, "insert sql: ${sql}")
@@ -127,11 +123,10 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
         return mNoteList
     }
     
-    private fun countRows():Int{
+    fun countRows():Int{
         var numRows = 0
 
-        val mDb: SQLiteDatabase = c.openOrCreateDatabase(DBNAME,
-            Context.MODE_PRIVATE, null)
+        val mDb: SQLiteDatabase = openDb()
         
         // count rows
         var mSql = "SELECT COUNT (*) FROM ${TABLENAME}"
@@ -143,8 +138,34 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
         return numRows
     }
 
+    fun newRecord(title:String, content:String): Int {
+
+        // Find highest Id # in db table
+        val mDb = openDb()
+        var sql = "SELECT MAX(Id) FROM $TABLENAME;"
+        var response = mDb.rawQuery(sql, null)
+        response.moveToFirst()
+//        Log.d(TAG, " newRecord() - response value: ${response.getInt(0)}")
+        var i = response.getInt(0)+1
+
+        // Insert new row of the given data
+        Log.d(TAG, "Inserting new record. id#: $i title: $title")
+        sql = "INSERT INTO ${TABLENAME} (Id, Title, Content) VALUES ('$i','$title','$content');"
+        mDb.execSQL(sql)
+
+        return 1
+    }
+
+    private fun openDb():SQLiteDatabase {
+        val mDb: SQLiteDatabase = c.openOrCreateDatabase(DBNAME,
+            Context.MODE_PRIVATE, null)
+        return mDb
+    }
+
     override fun onCreate(p0: SQLiteDatabase?) {
         TODO("Not yet implemented")
+
+        Log.d(TAG, "onCreate()")
 
             val p0 = Activity().openOrCreateDatabase(DBNAME,
             MODE_PRIVATE, null)   //TODO: Find out why this code would work inside a fragment, but not here. Must be a context issue.
