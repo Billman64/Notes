@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.database.Cursor
+import android.database.sqlite.SQLiteCursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteDatabase.openOrCreateDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -32,8 +34,8 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 
 
         // Temp code for debugging only !!!
-        var tempSql = "DROP TABLE IF EXISTS ${TABLENAME}"
-        db.execSQL(tempSql)
+//        var tempSql = "DROP TABLE IF EXISTS ${TABLENAME}"
+//        db.execSQL(tempSql)
 
         // Ensure there's a Notes table
         var sql = "CREATE TABLE IF NOT EXISTS ${TABLENAME} (Id INT, Title VARCHAR, Content VARCHAR);"
@@ -153,6 +155,59 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
         sql = "INSERT INTO ${TABLENAME} (Id, Title, Content) VALUES ('$i','$title','$content');"
         mDb.execSQL(sql)
 
+        mDb.close()
+        return 1
+    }
+
+    fun readRecord(id:Int): Note {
+
+        val mDb = openDb()
+        val sql = "SELECT Title, Content FROM $TABLENAME WHERE Id=$id;"
+        Log.d(TAG, "readRecord() SQL: $sql")
+        lateinit var response: Cursor
+
+        // Fetch record based on given id
+        try {
+            response = mDb.rawQuery(sql, null)
+            response.moveToFirst()
+        } catch(e:Exception) {      // Handling for any database error
+            Log.e(TAG, "readRecord() error. Message: ${e.message}")
+        }
+
+        // If the record is found, store it in a local Note
+        var note = Note("","")
+        if(response.count>0) {
+            note = Note(response.getString(0), response.getString(1))
+            Log.d(TAG, "readRecord() - ${note.title} | ${note.content}")
+        } else Log.d(TAG, "readRecord() - record not found (id#: $id)")     // Handling for non-existent record
+
+        mDb.close()
+        return note
+    }
+
+    fun deleteRecord(id:Int):Int {
+
+        val mDb = openDb()
+        var sql = "DELETE FROM $TABLENAME WHERE Id = '$id';"
+        var response = mDb.rawQuery(sql, null)
+        Log.d(TAG, "Record deleted. Id#: $id")
+
+        //TODO: Maintain contiguous id numbering by adjusting records of higher id #'s to move down by 1
+
+        mDb.close()
+        return 1
+    }
+
+    fun updateRecord(id:Int, title:String, content:String):Int{
+        // Updates record with given parameters
+        // TODO: make non-id parameters optional as a safeguard against accidentally deleting data
+
+        val mDb = openDb()
+        var sql = "UPDATE $TABLENAME SET Title = '$title', Content = '$content' WHERE Id=$id;"
+        var response = mDb.rawQuery(sql, null).moveToFirst()
+        Log.d(TAG, "Record updated Id#: $id Title: $title")
+
+        mDb.close()
         return 1
     }
 

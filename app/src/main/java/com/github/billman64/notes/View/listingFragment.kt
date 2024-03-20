@@ -43,9 +43,6 @@ class listingFragment : Fragment() {
 
       _binding = FragmentFirstBinding.inflate(inflater, container, false)
 
-
-
-
       return binding.root
 
     }
@@ -58,9 +55,6 @@ class listingFragment : Fragment() {
         var vm = SharedViewModel()
 
         Log.d(TAG, "(frag1) vm.title: ${vm.title.value.toString()}")
-
-
-
 
     }
 
@@ -78,39 +72,26 @@ class listingFragment : Fragment() {
             MODE_PRIVATE, null)
 
         Log.d(TAG, "db loading from helper...")
-        var noteList = dbH.loadData()
 
 
         // testing purposes only
-//        dbH.newRecord("test", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-//        dbH.countRows()
+//        dbH.newRecord("Drive for Uber", "Look for events in the Cbus area.")
+//        dbH.updateRecord(dbH.countRows()-1, "Drive Lyft instead", "Check out the Cbus area.")
+//        Log.d(TAG, "Record updated!")
+//        var a = dbH.readRecord(3000)
+//        Log.d(TAG, "dbH.readRecord(2): ${a.title} | ${a.content}")
 
 
 
+        var noteList = dbH.loadData()
         var adapter = NotesAdapter(noteList)
-
-        adapter.setOnClickListener(object: NotesAdapter.OnClickListener { //TODO: figure out why this listener is not responding
-            override fun onClick(position: Int, model: Note) {
-                Log.d(TAG, "adapter clicked!")
-
-                findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-            }
-        } )
         binding.recyclerview.adapter = adapter
 
-
-//        binding.recyclerview.setOnClickListener {
-//            Log.d(TAG, "recyclerView tapped")
-//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-//        }
-
         Log.d(TAG, "recyclerView - item count: ${binding.recyclerview.adapter?.itemCount}")
-
 
         val vm = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
 
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -118,9 +99,6 @@ class listingFragment : Fragment() {
     }
 
 
-
-    
-    
     // Deprecated
     private fun mockDataNoDb(): ArrayList<Note> {
         var list = ArrayList<Note>()
