@@ -58,10 +58,15 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
 
     // Dagger
-    implementation("com.google.dagger:dagger:2.51")
-    annotationProcessor("com.google.dagger:dagger-compiler:2.51")
+//    implementation("com.google.dagger:dagger:2.51")
+//    annotationProcessor("com.google.dagger:dagger-compiler:2.51")
     
     // JUnit
     androidTestImplementation("junit:junit:4.13.2")
+
+    // Mockito
+    testImplementation("junit:junit:4.12")
+    testImplementation("org.mockito:mockito-core:3.11.2")
+    androidTestImplementation("org.mockito-inline:3.11.2")
 
 }

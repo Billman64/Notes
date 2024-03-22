@@ -3,26 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/listingFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
+        android:id="@+id/listingFragment"
         android:name="com.github.billman64.notes.View.listingFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first" >
+        tools:layout="@layout/fragment_listing" >
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            app:destination="@id/detailFragment" />
+
+        <action
+            android:id="@+id/action_createNewNoteFragment_to_listingFragment"
+            app:destination="@id/createNewNoteFragment" />
+
     </fragment>
+
     <fragment
-        android:id="@+id/SecondFragment"
+        android:id="@+id/detailFragment"
         android:name="com.github.billman64.notes.View.detailFragment"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second" >
+        tools:layout="@layout/fragment_detail" >
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            app:destination="@id/listingFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createNewNoteFragment"
+        android:name="com.github.billman64.notes.View.createNewNoteFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_listing" >
+
+        <action
+            android:id="@+id/createNewNoteFragment_to_listingFragment"
+            app:destination="@id/listingFragment" />
     </fragment>
 </navigation>

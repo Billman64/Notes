@@ -6,14 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.github.billman64.notes.Model.Note
 import com.github.billman64.notes.R
+import com.github.billman64.notes.ViewModel.SharedViewModel
 
 class NotesAdapter(private val noteList:ArrayList<Note>): RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
+
 //class NotesAdapter(private val noteList:ArrayList<Note>, private val itemClickListener: (note:Note) -> Unit): RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
+//TODO: Figure out how to set ViewModel data from an item. (Interface with item from calling fragment?)
+
     val TAG:String = "NotesApp-" + this.javaClass.simpleName
+    var vm:SharedViewModel = SharedViewModel()
 
 //    interface ItemClickListener {
 //        fun onItemClick(position: Int)
@@ -57,6 +63,8 @@ class NotesAdapter(private val noteList:ArrayList<Note>): RecyclerView.Adapter<N
 
         holder.itemView.setOnClickListener(View.OnClickListener {
             val title = titleView.text.toString()
+            val content = currentItem.content
+
 //            var content = previewView.text.toString()
             Log.d(TAG, "item clicked: ${title} ")
 
@@ -74,6 +82,10 @@ class NotesAdapter(private val noteList:ArrayList<Note>): RecyclerView.Adapter<N
             // Navigate to 2nd fragment to show content of selected note
                 //TODO: get proper note id for note-specific fragment
 
+//            vm = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+
+            vm.setTitle(title)
+            vm.setContent(content)
 
              it.findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
 

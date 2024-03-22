@@ -16,6 +16,9 @@
     <string name="mock3">About this app</string>
     <string name="mock3_content">This app uses 2 fragments in an MVVP architecture. The list of notes are shown in a RecyclerView, which is a memory-efficient way to display a large number of notes.</string>
 
+    <string name="create_new_note">new note</string>
+    <string name="create_new_text">Type new note here.</string>
+
     <string name="content">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus

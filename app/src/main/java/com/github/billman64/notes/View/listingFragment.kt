@@ -20,7 +20,7 @@ import com.github.billman64.notes.Model.DbHelper
 import com.github.billman64.notes.Model.Note
 import com.github.billman64.notes.R
 import com.github.billman64.notes.ViewModel.SharedViewModel
-import com.github.billman64.notes.databinding.FragmentFirstBinding
+import com.github.billman64.notes.databinding.FragmentListingBinding
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -28,12 +28,12 @@ import com.github.billman64.notes.databinding.FragmentFirstBinding
 class listingFragment : Fragment() {
 
     private val TAG = "Notes-" + this.javaClass.simpleName
-    private var _binding: FragmentFirstBinding? = null
+    private var _binding: FragmentListingBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private val vm: ViewModel = SharedViewModel()
+//    private val vm: ViewModel = SharedViewModel()
 
 
     override fun onCreateView(
@@ -41,7 +41,11 @@ class listingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-      _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        lateinit var vm:SharedViewModel
+        vm = ViewModelProvider(this).get(SharedViewModel::class.java)
+
+        _binding = FragmentListingBinding.inflate(inflater, container, false)
+
 
       return binding.root
 
@@ -83,13 +87,27 @@ class listingFragment : Fragment() {
 
 
 
+        var vm:SharedViewModel = SharedViewModel()
+
+        vm = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
+
+//        vm.setTitle("aaa")    //test code
+//        vm.setContent("bbb")
+
+        Log.d(TAG, "ViewModel testing - title: ${vm.title} content: ${vm.content}")
+
+
+
+
         var noteList = dbH.loadData()
+
+
+
+
         var adapter = NotesAdapter(noteList)
         binding.recyclerview.adapter = adapter
 
         Log.d(TAG, "recyclerView - item count: ${binding.recyclerview.adapter?.itemCount}")
-
-        val vm = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
 
     }
 

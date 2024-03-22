@@ -9,6 +9,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.github.billman64.notes.R
@@ -38,22 +39,36 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
-                    .setAnchorView(R.id.fab).show()
+//            Snackbar.make(view, "Creating new note...", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null)
+//                    .setAnchorView(R.id.fab).show()
+
+
+            switchFragment(createNewNoteFragment())
+            navController.navigate(R.id.createNewNoteFragment)
         }
 
 
-        // Replace fragment
-        //TODO: determine current fragment from ViewModel data
 
+        // Default fragment to the listing fragment.
+        switchFragment(createNewNoteFragment())
+
+//        val fm:FragmentManager = supportFragmentManager // supportFragmentManager needed to initialize
+//        val fragmentTransaction:FragmentTransaction = fm.beginTransaction()
+//            .setCustomAnimations(R.anim.fade_translate,0)   // custom animation
+//        fragmentTransaction.replace(R.id.nav_host_fragment_content_main, listingFragment())
+
+        //TODO: Use Dagger for dependency injection with objects, such as the DbHelper
+
+
+    }
+
+    private fun switchFragment(frag: Fragment){
         val fm:FragmentManager = supportFragmentManager // supportFragmentManager needed to initialize
         val fragmentTransaction:FragmentTransaction = fm.beginTransaction()
             .setCustomAnimations(R.anim.fade_translate,0)   // custom animation
-        fragmentTransaction.replace(R.id.nav_host_fragment_content_main, listingFragment())
-
-        //TODO: Use Dagger for dependency injection with objects
-
+        fragmentTransaction.replace(R.id.nav_host_fragment_content_main, frag)
+        // .commit causes visual items to freeze in place
 
     }
 override fun onCreateOptionsMenu(menu: Menu): Boolean {

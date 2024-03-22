@@ -16,10 +16,10 @@ public class SharedViewModel: ViewModel() {
         get() = _content
 
     // public setters
-    fun updateTitle(newTitle: String){
+    fun setTitle(newTitle: String){
         _title.value = newTitle
     }
-    fun updateContent(newContent: String){
+    fun setContent(newContent: String){
         _content.value = newContent
     }
 
