@@ -5,14 +5,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.database.Cursor
-import android.database.sqlite.SQLiteCursor
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteDatabase.openOrCreateDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import androidx.core.content.ContextCompat.getString
 import com.github.billman64.notes.R
-import com.google.android.material.internal.ContextUtils.getActivity
 
 class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 
@@ -52,11 +49,14 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
             sql="SELECT * FROM ${TABLENAME};"
             var sqlResponse = db.rawQuery(sql, null)
             sqlResponse.moveToFirst()
+
+            // Populate noteList ArrayList
             var currentNote = Note("","")
+            val u:Utilities = Utilities()
             for(i in 1..numRows) {
                 currentNote.title = sqlResponse.getString(1)
                 currentNote.content = sqlResponse.getString(2)
-                Log.d(TAG, "db reading $i: ${currentNote.title} | ${currentNote.content.subSequence(0..10)}")
+                Log.d(TAG, "db reading $i: ${currentNote.title} | ${u.cutText(currentNote.content)}")
                 noteList.add(currentNote)
                 sqlResponse.moveToNext()
                 currentNote = Note("","")

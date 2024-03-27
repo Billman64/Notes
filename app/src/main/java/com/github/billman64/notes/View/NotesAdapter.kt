@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.github.billman64.notes.Model.Note
+import com.github.billman64.notes.Model.Utilities
 import com.github.billman64.notes.R
 import com.github.billman64.notes.ViewModel.SharedViewModel
 
@@ -46,15 +47,15 @@ class NotesAdapter(private val noteList:ArrayList<Note>): RecyclerView.Adapter<N
         titleView.text = currentItem.title
 
         val previewView = holder.itemView.findViewById<TextView>(R.id.preview)
-        val previewThreshold = 40
+
         Log.d(TAG, "notesAdapter - item content: ${currentItem.content}")
 
         // Establish preview text, of proper size
         var preview = currentItem.content
-        if(preview.length<previewThreshold) preview = preview.subSequence(0,preview.length).toString()
+        val u:Utilities = Utilities()
+        val previewThreshold = 70
+         previewView.text = u.cutText(preview, previewThreshold)
 
-         previewView.text = preview
-        if(currentItem.content.length>=previewThreshold) previewView.text = "${previewView.text.toString()}..."
 
         holder.itemView.animation = AnimationUtils.loadAnimation(holder.itemView.context,
             R.anim.fade_translate
