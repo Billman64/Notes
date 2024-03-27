@@ -66,6 +66,7 @@ class listingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Load data into recyclerView (mock data for now)
+
         val recyclerView = binding.recyclerview
         recyclerView.layoutManager = LinearLayoutManager(this.context)
 
@@ -84,29 +85,19 @@ class listingFragment : Fragment() {
 //        Log.d(TAG, "Record updated!")
 //        var a = dbH.readRecord(3000)
 //        Log.d(TAG, "dbH.readRecord(2): ${a.title} | ${a.content}")
+//        dbH.newRecord("a", "b")
 
-        dbH.newRecord("a", "b")
-
-
-
+        // Initialize/get ViewModel
         var vm:SharedViewModel = SharedViewModel()
-
         vm = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
+        Log.d(TAG, "ViewModel testing - title: ${vm.title.value.toString()} content: ${vm.content.value}")
 
 //        vm.setTitle("aaa")    //test code
 //        vm.setContent("bbb")
 
-        Log.d(TAG, "ViewModel testing - title: ${vm.title} content: ${vm.content}")
-
-
-
 
         var noteList = dbH.loadData()
-
-
-
-
-        var adapter = NotesAdapter(noteList)
+        var adapter = NotesAdapter(noteList, vm)
         binding.recyclerview.adapter = adapter
 
         Log.d(TAG, "recyclerView - item count: ${binding.recyclerview.adapter?.itemCount}")

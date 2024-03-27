@@ -55,7 +55,11 @@ dependencies {
 
     // ViewModel
     val lifecycle_version = "2.3.1"
+//    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+
+    // Fragment
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
 
     // Dagger
     implementation("com.google.dagger:dagger:2.51")

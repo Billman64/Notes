@@ -31,8 +31,8 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 
 
         // Temp code for debugging only !!!
-//        var tempSql = "DROP TABLE IF EXISTS ${TABLENAME}"
-//        db.execSQL(tempSql)
+        var tempSql = "DROP TABLE IF EXISTS ${TABLENAME}"
+        db.execSQL(tempSql)
 
         // Ensure there's a Notes table
         var sql = "CREATE TABLE IF NOT EXISTS ${TABLENAME} (Id INT, Title VARCHAR, Content VARCHAR);"
