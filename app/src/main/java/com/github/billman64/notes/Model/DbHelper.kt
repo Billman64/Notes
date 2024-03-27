@@ -52,7 +52,7 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 
             // Populate noteList ArrayList
             var currentNote = Note("","")
-            val u:Utilities = Utilities()
+            val u = Utilities()
             for(i in 1..numRows) {
                 currentNote.title = sqlResponse.getString(1)
                 currentNote.content = sqlResponse.getString(2)
@@ -63,7 +63,7 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
             }
             Log.d(TAG, "db - first 3 titles: ${noteList[0].title} | ${noteList[1].title} | ${noteList[2].title}")
 
-
+            sqlResponse.close()
         } else {    // if no rows, create mock data
             noteList = loadMockData()
         }

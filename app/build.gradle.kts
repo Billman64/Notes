@@ -58,8 +58,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
 
     // Dagger
-//    implementation("com.google.dagger:dagger:2.51")
-//    annotationProcessor("com.google.dagger:dagger-compiler:2.51")
+    implementation("com.google.dagger:dagger:2.51")
+    annotationProcessor("com.google.dagger:dagger-compiler:2.51")
     
     // JUnit
     androidTestImplementation("junit:junit:4.13.2")

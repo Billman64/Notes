@@ -1,7 +1,13 @@
 package com.github.billman64.notes.Model
 
+import dagger.Module
+import dagger.Provides
+
+
+@Module
 class Utilities {
 
+    @Provides
     fun cutText(text:String, threshold:Int = 10):String{
         var output:String
 
