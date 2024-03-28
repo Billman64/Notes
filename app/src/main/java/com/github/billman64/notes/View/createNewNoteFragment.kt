@@ -12,10 +12,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.github.billman64.notes.Model.DbHelper
 import com.github.billman64.notes.ViewModel.SharedViewModel
 import com.github.billman64.notes.databinding.FragmentCreateBinding
+import dagger.Module
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
+
+@Module
 class createNewNoteFragment : Fragment() {
 
     private val TAG = this.javaClass.simpleName

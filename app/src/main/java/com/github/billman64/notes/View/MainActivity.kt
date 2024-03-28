@@ -14,7 +14,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.github.billman64.notes.R
 import com.github.billman64.notes.databinding.ActivityMainBinding
+import dagger.Module
 
+@Module
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration

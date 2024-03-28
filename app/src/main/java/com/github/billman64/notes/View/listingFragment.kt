@@ -21,10 +21,13 @@ import com.github.billman64.notes.Model.Note
 import com.github.billman64.notes.R
 import com.github.billman64.notes.ViewModel.SharedViewModel
 import com.github.billman64.notes.databinding.FragmentListingBinding
+import dagger.Module
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
+
+@Module
 class listingFragment : Fragment() {
 
     private val TAG = "Notes-" + this.javaClass.simpleName

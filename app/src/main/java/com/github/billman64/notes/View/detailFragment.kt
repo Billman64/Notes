@@ -12,10 +12,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.github.billman64.notes.Model.DbHelper
 import com.github.billman64.notes.ViewModel.SharedViewModel
 import com.github.billman64.notes.databinding.FragmentDetailBinding
+import dagger.Module
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
+
+@Module
 class detailFragment : Fragment() {
 
     private val TAG = this.javaClass.simpleName
@@ -78,10 +81,10 @@ class detailFragment : Fragment() {
             //TODO: delete confirmation dialog
 
             if(1==1){
-                val deleteResult = dbH.deleteRecord(id)    //TODO: figure out why note record is not being deleted
+                val deleteResult = dbH.deleteRecord(id)
                 Log.d(TAG, "DeleteResult $deleteResult")
 
-                Toast.makeText(context,"Note deleted?", Toast.LENGTH_SHORT).show()  //TODO: Use a string resource here
+                Toast.makeText(context,"Note deleted\n ${binding.title.text}", Toast.LENGTH_SHORT).show()  //TODO: Use a string resource here
             }
         })
     }

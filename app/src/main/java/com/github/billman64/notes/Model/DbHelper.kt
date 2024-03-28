@@ -10,7 +10,9 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import androidx.core.content.ContextCompat.getString
 import com.github.billman64.notes.R
+import dagger.Module
 
+@Module
 class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 
     companion object {
