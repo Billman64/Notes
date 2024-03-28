@@ -69,8 +69,6 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
             noteList = loadMockData()
         }
 
-        logDataSample(noteList)
-
 
 
         //TODO: use Room and utilize it for caching strategy to reduce db calls for better performance

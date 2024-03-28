@@ -40,7 +40,7 @@ class detailFragment : Fragment() {
 
         Log.d(TAG, "(frag2) vm.title.value: ${vm?.title?.value.toString()}")
         Log.d(TAG, "(frag2)  vm.content.value: ${vm?.content?.value.toString()}")
-        binding.title.text = vm?.title?.value.toString()
+        binding.title.text = vm.title?.value.toString()
 
 //        val vm = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
         vm.title.observe(viewLifecycleOwner, Observer {

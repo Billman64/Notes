@@ -94,7 +94,7 @@ class listingFragment : Fragment() {
         // Set up adapter and recyclerView
         var noteList = dbH.loadData()
         Log.d(TAG, "db loaded from helper. Count: ${noteList.count()}")
-        var adapter = NotesAdapter(noteList, vm)
+        var adapter = NotesAdapter(noteList, vm, this.requireContext())
         binding.recyclerview.adapter = adapter
 
         Log.d(TAG, "recyclerView - item count: ${binding.recyclerview.adapter?.itemCount}")

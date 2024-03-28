@@ -1,23 +1,26 @@
 package com.github.billman64.notes.View
 
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.github.billman64.notes.Model.DbHelper
 import com.github.billman64.notes.Model.Note
 import com.github.billman64.notes.Model.Utilities
 import com.github.billman64.notes.R
 import com.github.billman64.notes.ViewModel.SharedViewModel
 
-class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewModel
+class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewModel, private var c: Context
     ): RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
 //class NotesAdapter(private val noteList:ArrayList<Note>, private val itemClickListener: (note:Note) -> Unit): RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
 
@@ -26,6 +29,10 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
 //    interface ItemClickListener {
 //        fun onItemClick(position: Int)
 //    }
+
+    interface OnItemLongClickListener{
+        fun onItemLongClick(position: Int)
+    }
 
     private var onClickListener: OnClickListener? = null
 
@@ -58,7 +65,7 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
         // The less is done here, the better for performance since this will be called frequently.
 
 
-        // ClickListener
+        // ClickListener - Navigates go to detail view of note
         holder.itemView.setOnClickListener(View.OnClickListener {
             val id:Int = position   //TODO: make sure the position# matches record id#
             val title = titleView.text.toString()
@@ -86,7 +93,26 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
             // Navigate to 2nd fragment to show content of selected note
              it.findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         })
+
+        holder.itemView.setOnLongClickListener {
+            Log.d(TAG, "longpress on item ${currentItem.title} (position: $position) detected.")
+            holder.itemView.setBackgroundColor(Color.RED)
+
+            val id = position  //TODO: make sure the position# matches record id#, or pass record id#'s in Note data class.
+            val title = titleView.text.toString()
+            val dbH = DbHelper(c)   // Imported context works for this, FragmentActivity() does not.
+            val deleteResult = dbH.deleteRecord(id)     //TODO: fix - record not found
+            Log.d(TAG, "DeleteResult $deleteResult")
+
+
+            Toast.makeText(c, "Note deleted?:\n $title", Toast.LENGTH_SHORT)
+                .show()    //TODO: Use a string resource here
+
+            true
+        }
     }
+
+
 
     override fun getItemCount() = noteList.size
 
