@@ -255,5 +255,13 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
         TODO("Not yet implemented")
     }
 
+    fun purge() {
+        // ! Temp code for debugging only!!! It will purge data!
+        val tempSql = "DROP TABLE IF EXISTS ${TABLENAME}"
+        val db = openDb()
+        db.execSQL(tempSql)
+        Log.d(TAG, "Data purged!")
+    }
+
 
 }

@@ -85,6 +85,9 @@ class listingFragment : Fragment() {
 //        var a = dbH.readRecord(3000)
 //        Log.d(TAG, "dbH.readRecord(2): ${a.title} | ${a.content}")
 
+        // PURGE! For debugging and testing purposes only!!!
+//        dbH.purge()
+
 
         // Initialize/get ViewModel
         var vm:SharedViewModel = SharedViewModel()
