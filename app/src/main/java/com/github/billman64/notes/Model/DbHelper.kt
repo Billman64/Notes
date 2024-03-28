@@ -30,9 +30,9 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 //        val db:SQLiteDatabase = readableDatabase  // alternative
 
 
-        // Temp code for debugging only !!!
-        var tempSql = "DROP TABLE IF EXISTS ${TABLENAME}"
-        db.execSQL(tempSql)
+        // ! Temp code for debugging only!!! It will purge data!
+//        var tempSql = "DROP TABLE IF EXISTS ${TABLENAME}"
+//        db.execSQL(tempSql)
 
         // Ensure there's a Notes table
         var sql = "CREATE TABLE IF NOT EXISTS ${TABLENAME} (Id INT, Title VARCHAR, Content VARCHAR);"
@@ -61,7 +61,6 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
                 sqlResponse.moveToNext()
                 currentNote = Note("","")
             }
-            Log.d(TAG, "db - first 3 titles: ${noteList[0].title} | ${noteList[1].title} | ${noteList[2].title}")
 
             sqlResponse.close()
         } else {    // if no rows, create mock data
@@ -143,20 +142,28 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
     fun newRecord(title:String, content:String): Int {
 
         // Find highest Id # in db table
+        var i = 1   // Default id#, if no records found.
         val mDb = openDb()
         var sql = "SELECT MAX(Id) FROM $TABLENAME;"
-        var response = mDb.rawQuery(sql, null)
+        val response = mDb.rawQuery(sql, null)
         response.moveToFirst()
 //        Log.d(TAG, " newRecord() - response value: ${response.getInt(0)}")
-        var i = response.getInt(0)+1
+        response?.let {i = response.getInt(0)+1}
+        response.close()
 
         // Insert new row of the given data
         Log.d(TAG, "Inserting new record. id#: $i title: $title")
-        sql = "INSERT INTO ${TABLENAME} (Id, Title, Content) VALUES ('$i','$title','$content');"
-        mDb.execSQL(sql)
+        sql = "INSERT INTO ${TABLENAME} (Id, Title, Content) VALUES ('$i','$title','${Utilities().cutText(content)}');"
+        try{
+            mDb.execSQL(sql)
+        } catch(e:Exception){
+            mDb.close()
+            Log.e(TAG, "Database error! Exception message: ${e.message}")
+            return 0    // Return a failed status   //TODO: Consider an enum class for status constants
+        }
 
         mDb.close()
-        return 1
+        return 1    // Return a successful status
     }
 
     fun readRecord(id:Int): Note {

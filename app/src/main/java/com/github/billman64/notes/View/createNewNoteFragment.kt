@@ -21,39 +21,39 @@ class createNewNoteFragment : Fragment() {
     private var _binding: FragmentCreateBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private var dbH: DbHelper? =
-        this.context?.let { DbHelper(it) } //TODO: fix error - not attached to a context
+//    private var dbH: DbHelper? =
+//        this.context?.let { DbHelper(it) }
+//    private var dbH: DbHelper = DbHelper(requireContext())
     private val binding get() = this._binding!!
 
 //    private var vm = SharedViewModel()      // Reference shared ViewModel to receive Note detail data from (without depending on a fragment lifecycle)
-        private var vm: SharedViewModel = SharedViewModel()
+    private var vm: SharedViewModel = SharedViewModel()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCreateBinding.inflate(inflater,container, false)
 
+      return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         // Save button
         val button = binding.saveButton
+        val dbH = context?.let { DbHelper(it) }
         button.setOnClickListener(View.OnClickListener {
             Log.d(TAG, "save button clicked")
 
             val title = binding.title.text.toString()
             val content = binding.content.text.toString()
 
-            Log.d(TAG, "Saving $title...")
-            dbH?.newRecord(title, content)   // Save input data to database via the database helper object.
-            Log.d(TAG, " $title saved.")
+            val result = dbH?.newRecord(title, content)   // Save input data to database via the database helper object.
+            Log.d(TAG, " $title saved? Result: $result")
+            if(result == 1) Log.d(TAG, "$title saved!")
+                else Log.d(TAG, "$title not saved.")
         })
-
-      return binding.root
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
     }
 
     override fun onDestroyView() {

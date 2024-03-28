@@ -48,7 +48,7 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
         Log.d(TAG, "notesAdapter - item content: ${currentItem.content}")
 
         // Establish preview text, of proper size
-        var preview = currentItem.content
+        val preview = currentItem.content
         val u:Utilities = Utilities()
         val previewThreshold = 70
          previewView.text = u.cutText(preview, previewThreshold)
