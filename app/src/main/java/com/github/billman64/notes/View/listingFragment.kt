@@ -46,9 +46,7 @@ class listingFragment : Fragment() {
 
         _binding = FragmentListingBinding.inflate(inflater, container, false)
 
-
       return binding.root
-
     }
 
 
@@ -74,29 +72,25 @@ class listingFragment : Fragment() {
 
         Log.d(TAG, "about to load db from fragment...")
         val db: SQLiteDatabase = requireActivity().openOrCreateDatabase("notesDb",
-            MODE_PRIVATE, null)
-
-        Log.d(TAG, "db loading from helper...")
+            MODE_PRIVATE, null)     //TODO: refactor using DbHelper
 
 
-        // testing purposes only
+        // TESTING purposes only
 //        dbH.newRecord("Drive for Uber", "Look for events in the Cbus area.")
 //        dbH.updateRecord(dbH.countRows()-1, "Drive Lyft instead", "Check out the Cbus area.")
 //        Log.d(TAG, "Record updated!")
 //        var a = dbH.readRecord(3000)
 //        Log.d(TAG, "dbH.readRecord(2): ${a.title} | ${a.content}")
-//        dbH.newRecord("a", "b")
+
 
         // Initialize/get ViewModel
         var vm:SharedViewModel = SharedViewModel()
         vm = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
         Log.d(TAG, "ViewModel testing - title: ${vm.title.value.toString()} content: ${vm.content.value}")
 
-//        vm.setTitle("aaa")    //test code
-//        vm.setContent("bbb")
-
-
+        // Set up adapter and recyclerView
         var noteList = dbH.loadData()
+        Log.d(TAG, "db loaded from helper. Count: ${noteList.count()}")
         var adapter = NotesAdapter(noteList, vm)
         binding.recyclerview.adapter = adapter
 

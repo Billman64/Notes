@@ -43,4 +43,8 @@ class DbHelperUnitTests {
 //        dbHelper.newRecord("Some title", "Some content")
 //        assertEquals(dbHelper.countRows(), dbHelper.countRows() > 0)
     }
+    @Test
+    fun contiguousIdNumbers() {
+        //TODO: Test to see if all id's in database table are contiguous, with no gaps from deletions
+    }
 }

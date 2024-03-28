@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.github.billman64.notes.Model.DbHelper
@@ -51,8 +52,10 @@ class createNewNoteFragment : Fragment() {
 
             val result = dbH?.newRecord(title, content)   // Save input data to database via the database helper object.
             Log.d(TAG, " $title saved? Result: $result")
-            if(result == 1) Log.d(TAG, "$title saved!")
-                else Log.d(TAG, "$title not saved.")
+            if(result == 1) {
+                Log.d(TAG, "$title saved!")
+                Toast.makeText(context, "$title saved.", Toast.LENGTH_SHORT).show()
+            } else Log.e(TAG, "$title not saved.")
         })
     }
 

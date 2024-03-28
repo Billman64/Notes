@@ -45,8 +45,6 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
         titleView.text = currentItem.title
         val previewView = holder.itemView.findViewById<TextView>(R.id.preview)
 
-        Log.d(TAG, "notesAdapter - item content: ${currentItem.content}")
-
         // Establish preview text, of proper size
         val preview = currentItem.content
         val u:Utilities = Utilities()
@@ -62,6 +60,7 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
 
         // ClickListener
         holder.itemView.setOnClickListener(View.OnClickListener {
+            val id:Int = position   //TODO: make sure the position# matches record id#
             val title = titleView.text.toString()
             val content = currentItem.content
 
@@ -80,6 +79,7 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
 
             // Update ViewModel
             Log.d(TAG, "vm title before change: ${(vm as SharedViewModel).title.value} | content: ${(vm as SharedViewModel).content.value}")
+            (vm as SharedViewModel).setId(id)
             (vm as SharedViewModel).setTitle(title)
             (vm as SharedViewModel).setContent(content)
 

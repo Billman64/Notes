@@ -134,15 +134,16 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
         var mSqlResponse = mDb.rawQuery(mSql, null)
         mSqlResponse.moveToFirst()
         numRows = mSqlResponse.getInt(0)
+
+        mSqlResponse.close()
         mDb.close()
-                
         return numRows
     }
 
     fun newRecord(title:String, content:String): Int {
 
         // Find highest Id # in db table
-        var i = 1   // Default id#, if no records found.
+        var i = 0   // Default id#, if no records found. 0 is good because it can also match position number in RecyclerView item.
         val mDb = openDb()
         var sql = "SELECT MAX(Id) FROM $TABLENAME;"
         val response = mDb.rawQuery(sql, null)
@@ -168,7 +169,7 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
     fun readRecord(id:Int): Note {
 
         val mDb = openDb()
-        val sql = "SELECT Title, Content FROM $TABLENAME WHERE Id=$id;"
+        val sql = "SELECT Title, Content FROM $TABLENAME WHERE Id='$id';"
         Log.d(TAG, "readRecord() SQL: $sql")
         lateinit var response: Cursor
 
@@ -177,29 +178,41 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
             response = mDb.rawQuery(sql, null)
             response.moveToFirst()
         } catch(e:Exception) {      // Handling for any database error
-            Log.e(TAG, "readRecord() error. Message: ${e.message}")
+            Log.e(TAG, " readRecord() error. Message: ${e.message}")
+//            return Note("","")
         }
 
         // If the record is found, store it in a local Note
         var note = Note("","")
+        Log.d(TAG, " readRecord() - column count: ${response.columnCount}  | count: ${response.count}")
+
         if(response.count>0) {
             note = Note(response.getString(0), response.getString(1))
-            Log.d(TAG, "readRecord() - ${note.title} | ${note.content}")
-        } else Log.d(TAG, "readRecord() - record not found (id#: $id)")     // Handling for non-existent record
+            Log.d(TAG, " readRecord() - ${note.title} | ${note.content}")
+        } else Log.e(TAG, " readRecord() - record not found (id#: $id)")     // Handling for non-existent record
 
+        response.close()
         mDb.close()
         return note
     }
 
     fun deleteRecord(id:Int):Int {
 
-        val mDb = openDb()
-        var sql = "DELETE FROM $TABLENAME WHERE Id = '$id';"
-        var response = mDb.rawQuery(sql, null)
-        Log.d(TAG, "Record deleted. Id#: $id")
+        // Check existence of id #
+        val testNote = readRecord(id)
+        if(testNote.title == "" && testNote.content == "") {
+            Log.e(TAG, "Record#: $id not found!")
+            return 0
+        }
 
-        //TODO: Handling for non-existent id #
-        //TODO: Maintain contiguous id numbering by adjusting records of higher id #'s to move down by 1
+        // Delete record
+        val mDb = openDb()
+        val sql = "DELETE FROM $TABLENAME WHERE Id = '$id';"
+//        val response = mDb.rawQuery(sql, null)
+        val response = mDb.execSQL(sql)
+        Log.d(TAG, "Record deleted Id#: $id")
+
+        //TODO: Maintain contiguous id numbering by adjusting records of higher id #'s to move down by 1?
 
         mDb.close()
         return 1
