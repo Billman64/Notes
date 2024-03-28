@@ -147,13 +147,12 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
         var sql = "SELECT MAX(Id) FROM $TABLENAME;"
         val response = mDb.rawQuery(sql, null)
         response.moveToFirst()
-//        Log.d(TAG, " newRecord() - response value: ${response.getInt(0)}")
-        response?.let {i = response.getInt(0)+1}
+        response?.let {i = it.getInt(0)+1}
         response.close()
 
         // Insert new row of the given data
         Log.d(TAG, "Inserting new record. id#: $i title: $title")
-        sql = "INSERT INTO ${TABLENAME} (Id, Title, Content) VALUES ('$i','$title','${Utilities().cutText(content)}');"
+        sql = "INSERT INTO ${TABLENAME} (Id, Title, Content) VALUES ('$i','$title','$content');"
         try{
             mDb.execSQL(sql)
         } catch(e:Exception){
@@ -199,6 +198,7 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
         var response = mDb.rawQuery(sql, null)
         Log.d(TAG, "Record deleted. Id#: $id")
 
+        //TODO: Handling for non-existent id #
         //TODO: Maintain contiguous id numbering by adjusting records of higher id #'s to move down by 1
 
         mDb.close()
