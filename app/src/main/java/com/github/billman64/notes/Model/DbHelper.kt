@@ -132,10 +132,12 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
         // count rows
         var mSql = "SELECT COUNT (*) FROM ${TABLENAME}"
         var mSqlResponse = mDb.rawQuery(mSql, null)
-        mSqlResponse.moveToFirst()
-        numRows = mSqlResponse.getInt(0)
+        if(mSqlResponse != null){
+            mSqlResponse.moveToFirst()
+            numRows = mSqlResponse.getInt(0)
+            mSqlResponse.close()
+        }
 
-        mSqlResponse.close()
         mDb.close()
         return numRows
     }
@@ -147,9 +149,11 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
         val mDb = openDb()
         var sql = "SELECT MAX(Id) FROM $TABLENAME;"
         val response = mDb.rawQuery(sql, null)
-        response.moveToFirst()
-        response?.let {i = it.getInt(0)+1}
-        response.close()
+        response?.let {
+            it.moveToFirst()
+            i = it.getInt(0)+1
+            response.close()
+        }
 
         // Insert new row of the given data
         Log.d(TAG, "Inserting new record. id#: $i title: $title")
@@ -233,7 +237,7 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 
     private fun openDb():SQLiteDatabase {
         val mDb: SQLiteDatabase = c.openOrCreateDatabase(DBNAME,
-            Context.MODE_PRIVATE, null)
+            MODE_PRIVATE, null)
         return mDb
     }
 

@@ -73,4 +73,9 @@ dependencies {
     testImplementation("org.mockito:mockito-core:3.11.2")
     androidTestImplementation("org.mockito-inline:3.11.2")
 
+    // Mockk
+    val mockkVersion = "1.13.10"
+    testImplementation("io.mockk:mockk-android:${mockkVersion}")
+    testImplementation("io.mockk:mockk-agent:${mockkVersion}")
+
 }
