@@ -53,15 +53,16 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
             sqlResponse.moveToFirst()
 
             // Populate noteList ArrayList
-            var currentNote = Note("","")
+            var currentNote = Note(0,"","")
             val u = Utilities()
             for(i in 1..numRows) {
+                currentNote.id = sqlResponse.getInt(0)
                 currentNote.title = sqlResponse.getString(1)
                 currentNote.content = sqlResponse.getString(2)
-                Log.d(TAG, "db reading $i: ${currentNote.title} | ${u.cutText(currentNote.content)}")
+                Log.d(TAG, "db reading $i: id: ${currentNote.id} | ${currentNote.title} | ${u.cutText(currentNote.content)}")
                 noteList.add(currentNote)
                 sqlResponse.moveToNext()
-                currentNote = Note("","")
+                currentNote = Note(0,"","")
             }
 
             sqlResponse.close()
@@ -97,9 +98,9 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 
         // Mock data
         // Resource strings used to facilitate global language translations.
-        mNoteList.add(Note(getString(c, R.string.mock1),  getString(c, R.string.mock1_content)))
-        mNoteList.add(Note(getString(c, R.string.mock2), getString(c, R.string.mock2_content)))
-        mNoteList.add(Note(getString(c, R.string.mock3), getString(c, R.string.mock3_content)))
+        mNoteList.add(Note(1, getString(c, R.string.mock1),  getString(c, R.string.mock1_content)))
+        mNoteList.add(Note(2,getString(c, R.string.mock2), getString(c, R.string.mock2_content)))
+        mNoteList.add(Note(3,getString(c, R.string.mock3), getString(c, R.string.mock3_content)))
 
         // Ensure db exists first. If not, create a new one.
 //        val db: SQLiteDatabase = Activity().openOrCreateDatabase(DBNAME,
@@ -147,6 +148,8 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
         // Find highest Id # in db table
         var i = 0   // Default id#, if no records found. 0 is good because it can also match position number in RecyclerView item.
         val mDb = openDb()
+
+        // New id# (highest id# + 1)
         var sql = "SELECT MAX(Id) FROM $TABLENAME;"
         val response = mDb.rawQuery(sql, null)
         response?.let {
@@ -173,7 +176,7 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
     fun readRecord(id:Int): Note {
 
         val mDb = openDb()
-        val sql = "SELECT Title, Content FROM $TABLENAME WHERE Id='$id';"
+        val sql = "SELECT Id, Title, Content FROM $TABLENAME WHERE Id='$id';"
         Log.d(TAG, "readRecord() SQL: $sql")
         lateinit var response: Cursor
 
@@ -187,12 +190,12 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
         }
 
         // If the record is found, store it in a local Note
-        var note = Note("","")
+        var note = Note(0,"","")
         Log.d(TAG, " readRecord() - column count: ${response.columnCount}  | count: ${response.count}")
 
         if(response.count>0) {
-            note = Note(response.getString(0), response.getString(1))
-            Log.d(TAG, " readRecord() - ${note.title} | ${note.content}")
+            note = Note(response.getInt(0), response.getString(1), response.getString(2))
+            Log.d(TAG, " readRecord() - id: ${note.id} | ${note.title} | ${note.content}")
         } else Log.e(TAG, " readRecord() - record not found (id#: $id)")     // Handling for non-existent record
 
         response.close()
@@ -204,7 +207,7 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 
         // Check existence of id #
         val testNote = readRecord(id)
-        if(testNote.title == "" && testNote.content == "") {
+        if(testNote.title == "" && testNote.content == "") {    //TODO: Use a better condition that can handle a blank note.
             Log.e(TAG, "Record#: $id not found!")
             return 0
         }
@@ -224,7 +227,7 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 
     fun updateRecord(id:Int, title:String, content:String):Int{
         // Updates record with given parameters
-        // TODO: make non-id parameters optional as a safeguard against accidentally deleting data
+        // TODO: make non-id parameters optional as a safeguard against accidentally deleting content data.
 
         val mDb = openDb()
         var sql = "UPDATE $TABLENAME SET Title = '$title', Content = '$content' WHERE Id=$id;"

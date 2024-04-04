@@ -70,22 +70,11 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
 
         // ClickListener - Navigates go to detail view of note
         holder.itemView.setOnClickListener(View.OnClickListener {
-            val id:Int = position   //TODO: make sure the position# matches record id#
+//            val id:Int = position   //TODO: make sure the position# matches record id#
+            val id:Int = noteList[position].id
             val title = titleView.text.toString()
             val content = currentItem.content
-
             Log.d(TAG, "item clicked: $title")
-
-            // Old code
-//            itemClickListener(Note(title, content))
-//            SharedViewModel().updateTitle(title)
-//            SharedViewModel().updateContent(content)
-
-//            vm = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
-//            var vm:SharedViewModel = SharedViewModel()
-//            vm = ViewModelProvider()[SharedViewModel::class.java]
-//            vm = ViewModelProvider(FragmentActivity())[SharedViewModel::class.java]
-//            vm = ViewModelProvider(RequireActivity())[SharedViewModel::class.java]    // RequireActivity() not recognized in Adapter
 
             // Update ViewModel
             Log.d(TAG, "vm title before change: ${(vm as SharedViewModel).title.value} | content: ${(vm as SharedViewModel).content.value}")
@@ -102,7 +91,9 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
             Log.d(TAG, "longpress on item ${currentItem.title} (position: $position) detected.")
             holder.itemView.setBackgroundColor(Color.RED)
 
-            val id = position  //TODO: make sure the position# matches record id#, or pass record id#'s in Note data class.
+//            val id = position  //TODO: make sure the position# matches record id#, or pass record id#'s in Note data class.
+            val id = noteList[position].id
+
             val title = titleView.text.toString()
 
             // Delete confirmation dialog       //TODO: Refactor into re-usable function, call it in other place where user can delete.
