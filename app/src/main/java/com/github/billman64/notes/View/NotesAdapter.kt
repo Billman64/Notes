@@ -99,19 +99,20 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
 
             // Delete confirmation dialog       //TODO: Refactor into re-usable function, call it in other place where user can delete.
             val dialogBuilder = MaterialAlertDialogBuilder(c)
-                .setTitle("Delete note confirmation")
-                .setMessage("Are you sure you want to delete this note?")
-                .setNegativeButton("No",) { dialog,
+                .setTitle(c.getString(R.string.delete_note_confirmation))
+                .setMessage(c.getString(R.string.delete_confirm_message))
+                .setNegativeButton(c.getString(R.string.no)) { dialog,
                     which -> holder.itemView.background = backgroundColor   // restore original item color gradient
                 }
-                .setPositiveButton("Yes") { dialog,
+                .setPositiveButton(c.getString(R.string.yes)) { dialog,
                     which ->
                     val dbH = DbHelper(c)   // Imported context works for this, FragmentActivity() does not.
-                    val deleteResult = dbH.deleteRecord(id)     //TODO: fix - record not found
+                    val deleteResult = dbH.deleteRecord(id)     //TODO?: fix - record not found
                     Log.d(TAG, "DeleteResult $deleteResult")
 
-                    Toast.makeText(c, "Note deleted?:\n $title", Toast.LENGTH_SHORT)
-                        .show()    //TODO: Use a string resource here
+                    Toast.makeText(c,
+                        c.getString(R.string.note_deleted, title), Toast.LENGTH_SHORT)
+                        .show()
                 }
             var confirm = dialogBuilder.show()
             Log.d(TAG, "Delete confirmation dialog shown")

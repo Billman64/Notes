@@ -55,4 +55,9 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="delete_note_confirmation">Delete note confirmation</string>
+    <string name="delete_confirm_message">Are you sure you want to delete this note?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="note_deleted">Note deleted:\n %1$s</string>
 </resources>
