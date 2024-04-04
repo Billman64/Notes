@@ -89,6 +89,7 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
         // Delete by longpress
         holder.itemView.setOnLongClickListener {
             Log.d(TAG, "longpress on item ${currentItem.title} (position: $position) detected.")
+            val backgroundColor = holder.itemView.background
             holder.itemView.setBackgroundColor(Color.RED)
 
 //            val id = position  //TODO: make sure the position# matches record id#, or pass record id#'s in Note data class.
@@ -100,8 +101,10 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
             val dialogBuilder = MaterialAlertDialogBuilder(c)
                 .setTitle("Delete note confirmation")
                 .setMessage("Are you sure you want to delete this note?")
-                .setNegativeButton("no",null)
-                .setPositiveButton("yes") { dialog,
+                .setNegativeButton("No",) { dialog,
+                    which -> holder.itemView.background = backgroundColor   // restore original item color gradient
+                }
+                .setPositiveButton("Yes") { dialog,
                     which ->
                     val dbH = DbHelper(c)   // Imported context works for this, FragmentActivity() does not.
                     val deleteResult = dbH.deleteRecord(id)     //TODO: fix - record not found
