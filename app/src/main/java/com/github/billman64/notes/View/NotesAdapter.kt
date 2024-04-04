@@ -1,6 +1,8 @@
 package com.github.billman64.notes.View
 
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +21,7 @@ import com.github.billman64.notes.Model.Note
 import com.github.billman64.notes.Model.Utilities
 import com.github.billman64.notes.R
 import com.github.billman64.notes.ViewModel.SharedViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewModel, private var c: Context
     ): RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
@@ -94,19 +97,30 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
              it.findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         })
 
+        // Delete by longpress
         holder.itemView.setOnLongClickListener {
             Log.d(TAG, "longpress on item ${currentItem.title} (position: $position) detected.")
             holder.itemView.setBackgroundColor(Color.RED)
 
             val id = position  //TODO: make sure the position# matches record id#, or pass record id#'s in Note data class.
             val title = titleView.text.toString()
-            val dbH = DbHelper(c)   // Imported context works for this, FragmentActivity() does not.
-            val deleteResult = dbH.deleteRecord(id)     //TODO: fix - record not found
-            Log.d(TAG, "DeleteResult $deleteResult")
 
+            // Delete confirmation dialog       //TODO: Refactor into re-usable function, call it in other place where user can delete.
+            val dialogBuilder = MaterialAlertDialogBuilder(c)
+                .setTitle("Delete note confirmation")
+                .setMessage("Are you sure you want to delete this note?")
+                .setNegativeButton("no",null)
+                .setPositiveButton("yes") { dialog,
+                    which ->
+                    val dbH = DbHelper(c)   // Imported context works for this, FragmentActivity() does not.
+                    val deleteResult = dbH.deleteRecord(id)     //TODO: fix - record not found
+                    Log.d(TAG, "DeleteResult $deleteResult")
 
-            Toast.makeText(c, "Note deleted?:\n $title", Toast.LENGTH_SHORT)
-                .show()    //TODO: Use a string resource here
+                    Toast.makeText(c, "Note deleted?:\n $title", Toast.LENGTH_SHORT)
+                        .show()    //TODO: Use a string resource here
+                }
+            var confirm = dialogBuilder.show()
+            Log.d(TAG, "Delete confirmation dialog shown")
 
             true
         }
