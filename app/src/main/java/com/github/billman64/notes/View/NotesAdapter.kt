@@ -110,6 +110,8 @@ class NotesAdapter(private val noteList:ArrayList<Note>, private var vm: ViewMod
                     val deleteResult = dbH.deleteRecord(id)     //TODO?: fix - record not found
                     Log.d(TAG, "DeleteResult $deleteResult")
 
+                    //TODO: Fade out item until invisible, then remove it (Visibility.GONE?).
+
                     Toast.makeText(c,
                         c.getString(R.string.note_deleted, title), Toast.LENGTH_SHORT)
                         .show()

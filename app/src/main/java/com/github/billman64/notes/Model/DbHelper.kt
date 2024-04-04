@@ -146,7 +146,7 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
     fun newRecord(title:String, content:String): Int {
 
         // Find highest Id # in db table
-        var i = 0   // Default id#, if no records found. 0 is good because it can also match position number in RecyclerView item.
+        var i = 1   // Default id#, if no records found.
         val mDb = openDb()
 
         // New id# (highest id# + 1)
@@ -207,7 +207,7 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DBNAME,null, 1) {
 
         // Check existence of id #
         val testNote = readRecord(id)
-        if(testNote.title == "" && testNote.content == "") {    //TODO: Use a better condition that can handle a blank note.
+        if(testNote.id == 0) {
             Log.e(TAG, "Record#: $id not found!")
             return 0
         }
